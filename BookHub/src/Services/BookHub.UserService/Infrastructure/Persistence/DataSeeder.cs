@@ -21,8 +21,8 @@ public class DataSeeder
 
         var users = new[]
         {
-            User.Create("admin@bookhub.com", _passwordHasher.Hash("Admin123!"), "Admin", "BookHub"),
-            User.Create("librarian@bookhub.com", _passwordHasher.Hash("Librarian123!"), "Marie", "Dupont"),
+            User.Create("admin@bookhub.com", _passwordHasher.Hash("Admin123!"), "Admin", "BookHub", UserRole.Admin),
+            User.Create("librarian@bookhub.com", _passwordHasher.Hash("Librarian123!"), "Marie", "Dupont", UserRole.Librarian),
             User.Create("user@bookhub.com", _passwordHasher.Hash("User123!"), "Jean", "Martin")
         };
 

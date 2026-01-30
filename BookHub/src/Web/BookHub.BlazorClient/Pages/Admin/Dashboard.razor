@@ -1,43 +1,68 @@
 @page "/admin/dashboard"
+@inject IBookService BookService
+@inject ILoanService LoanService
+@inject IAuthService UserService
+
 
 <PageTitle>Administration - BookHub</PageTitle>
+
 
 <h1>Tableau de bord administrateur</h1>
 
 <div class="row mb-4">
-    <div class="col-md-3">
-        <div class="card text-white bg-primary">
+    <div class="col-md-4">
+        <div class="card text-white bg-warning">
             <div class="card-body">
-                <h5 class="card-title">Livres</h5>
-                <p class="card-text display-6">--</p>
+                <h5 class="card-title">Livres les plus empruntés</h5>
+                <ul class="unstyled">
+                    @foreach (var book in mostLoanedBooks)
+                    {
+                        <li>
+                            <strong><a href="/books/@book.Id" class="">@book.Title</a></strong> - @allLoans.Count(l => l.BookId == book.Id) fois
+                        </li>
+                    }
+                </ul>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card text-white bg-success">
             <div class="card-body">
-                <h5 class="card-title">Emprunts actifs</h5>
-                <p class="card-text display-6">--</p>
+                <h5 class="card-title">Emprunts en cours</h5>
+                <p class="card-text display-6">@activeLoans.Count()</p>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card text-white bg-danger">
             <div class="card-body">
-                <h5 class="card-title">En retard</h5>
-                <p class="card-text display-6">--</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="card text-white bg-info">
-            <div class="card-body">
-                <h5 class="card-title">Utilisateurs</h5>
-                <p class="card-text display-6">--</p>
+                <h5 class="card-title">Emprunts en retard</h5>
+                <p class="card-text display-6">@overdueLoans.Count()</p>
             </div>
         </div>
     </div>
 </div>
 
+
+
 @code {
+    private IEnumerable<LoanDto> allLoans = new List<LoanDto>();
+    private IEnumerable<LoanDto> activeLoans => allLoans.Where(l => l.ReturnDate == null);
+    private IEnumerable<LoanDto> overdueLoans => activeLoans.Where(l => l.DueDate < DateTime.UtcNow);
+    private IEnumerable<BookDto> allBooks = new List<BookDto>();
+    private IEnumerable<BookDto> mostLoanedBooks = new List<BookDto>();
+
+    private int totalUsers = 0;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        allLoans = await LoanService.GetAllLoansAsync();
+        allBooks = await BookService.GetAllBooksAsync();
+        mostLoanedBooks = allBooks
+            .OrderByDescending(b => allLoans.Count(l => l.BookId == b.Id))
+            .Take(5);
+
+        totalUsers = allLoans.Select(l => l.UserId).Distinct().Count();
+    }
 }

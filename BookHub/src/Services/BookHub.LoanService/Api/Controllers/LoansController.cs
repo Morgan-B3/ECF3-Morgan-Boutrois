@@ -1,5 +1,6 @@
 using BookHub.LoanService.Application.Services;
 using BookHub.Shared.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookHub.LoanService.Api.Controllers;
@@ -59,6 +60,7 @@ public class LoansController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto dto, CancellationToken cancellationToken)
     {
         try

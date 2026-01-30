@@ -17,7 +17,7 @@ public class User
 
     private User() { }
 
-    public static User Create(string email, string passwordHash, string firstName, string lastName)
+    public static User Create(string email, string passwordHash, string firstName, string lastName, UserRole role = UserRole.Member )
     {
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email is required", nameof(email));
@@ -35,7 +35,7 @@ public class User
             PasswordHash = passwordHash,
             FirstName = firstName,
             LastName = lastName,
-            Role = UserRole.Member,
+            Role = role,
             IsActive = true,
             CreatedAt = DateTime.UtcNow
         };

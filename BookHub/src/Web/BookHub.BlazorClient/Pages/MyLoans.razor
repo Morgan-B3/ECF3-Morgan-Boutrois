@@ -1,8 +1,102 @@
 @page "/my-loans"
+@inject ILoanService LoanService
+@inject AuthStateProvider AuthState
+
 
 <PageTitle>Mes Emprunts - BookHub</PageTitle>
 
+
 <h1>Mes Emprunts</h1>
 
+
+@if (isLoading)
+{
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+        </div>
+    </div>
+}
+else if (!isAuthenticated)
+{
+    <div class="alert alert-info">
+        <a href="/login">Connectez-vous</a> pour voir vos emprunts.
+    </div>
+}
+else if (loans == null || !loans.Any())
+{
+    <div class="alert alert-info">
+        Vous n'avez actuellement aucun emprunt.
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var loan in loans)
+        {
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">@loan.BookTitle</h5>
+                    <small class="text-muted">
+                        Emprunté le : @loan.LoanDate.ToLocalTime() <br />
+                        Retour prévu le : @loan.DueDate.ToLocalTime()
+                    </small>
+                </div>
+                @if (loan.ReturnDate != null)
+                {
+                    <span class="badge bg-success">Rendu le @loan.ReturnDate?.ToLocalTime()</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning">En cours</span>
+                }
+            </div>
+        }
+    </div>
+}
+
+
 @code {
+    private IEnumerable<LoanDto>? loans;
+    private bool isLoading = true;
+    private bool isAuthenticated;
+    private UserDto? currentUser;
+
+    private async Task LoadUser()
+    {
+        currentUser = AuthState.CurrentUser;
+        isAuthenticated = currentUser != null;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUser();
+        await LoadLoans();
+    }
+
+
+    private async Task LoadLoans()
+    {
+        isLoading = true;
+        try
+        {
+            if (AuthState.CurrentUser == null)
+            {
+                loans = Enumerable.Empty<LoanDto>();
+                return;
+            }
+
+
+            loans = await LoanService.GetUserLoansAsync(AuthState.CurrentUser.Id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading loans: {ex.Message}");
+            loans = Enumerable.Empty<LoanDto>();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
 }
