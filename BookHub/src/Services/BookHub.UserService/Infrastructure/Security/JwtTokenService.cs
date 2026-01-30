@@ -19,10 +19,13 @@ public class JwtTokenService : ITokenService
     public (string Token, DateTime ExpiresAt) GenerateToken(User user)
     {
         var jwtSettings = _configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings["SecretKey"] ?? "BookHubSuperSecretKeyThatIsAtLeast32CharactersLong!";
+        var secretKey = jwtSettings["SecretKey"] ?? throw new Exception("JwtSettings:SecretKey is missing");
         var issuer = jwtSettings["Issuer"] ?? "BookHub";
         var audience = jwtSettings["Audience"] ?? "BookHubUsers";
-        var expirationHours = int.Parse(jwtSettings["ExpirationHours"] ?? "24");
+        if (!int.TryParse(jwtSettings["ExpirationHours"], out var expirationHours))
+        {
+            expirationHours = 24;
+        }
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -23,7 +23,8 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 
 // JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"] ?? "BookHubSuperSecretKeyThatIsAtLeast32CharactersLong!";
+DotNetEnv.Env.Load();
+var secretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY") ?? throw new Exception("JWT_SECRET_KEY is missing");
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -58,7 +59,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.AllowAnyOrigin()
+        policy.WithOrigins("http://localhost:8080")
               .AllowAnyMethod()
               .AllowAnyHeader();
     });

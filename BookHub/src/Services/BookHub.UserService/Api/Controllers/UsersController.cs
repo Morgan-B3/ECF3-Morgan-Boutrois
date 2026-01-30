@@ -17,7 +17,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,Librarian")]
+    //[Authorize(Roles = "Admin,Librarian")]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAll(CancellationToken cancellationToken)
     {
         var users = await _userService.GetAllUsersAsync(cancellationToken);
