@@ -1,0 +1,82 @@
+using BookHub.LoanService.Application.Services;
+using BookHub.Shared.DTOs;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BookHub.LoanService.Api.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class LoansController : ControllerBase
+{
+    private readonly ILoanService _loanService;
+
+    public LoansController(ILoanService loanService)
+    {
+        _loanService = loanService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<LoanDto>>> GetAll(CancellationToken cancellationToken)
+    {
+        var loans = await _loanService.GetAllLoansAsync(cancellationToken);
+        return Ok(loans);
+    }
+
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<LoanDto>> GetById(Guid id, CancellationToken cancellationToken)
+    {
+        var loan = await _loanService.GetLoanByIdAsync(id, cancellationToken);
+        if (loan == null) return NotFound();
+        return Ok(loan);
+    }
+
+    [HttpGet("user/{userId:guid}")]
+    public async Task<ActionResult<IEnumerable<LoanDto>>> GetByUserId(Guid userId, CancellationToken cancellationToken)
+    {
+        var loans = await _loanService.GetLoansByUserIdAsync(userId, cancellationToken);
+        return Ok(loans);
+    }
+
+    [HttpGet("overdue")]
+    public async Task<ActionResult<IEnumerable<LoanDto>>> GetOverdue(CancellationToken cancellationToken)
+    {
+        var overdueLoans = await _loanService.GetOverdueLoansAsync(cancellationToken);
+
+        var dtoList = overdueLoans.Select(loan => new LoanDto(
+        loan.Id,
+        loan.UserId,
+        loan.BookId,
+        loan.BookTitle,
+        loan.UserEmail,
+        loan.LoanDate,
+        loan.DueDate,
+        loan.ReturnDate,
+        loan.Status,
+        loan.PenaltyAmount
+        ));
+
+        return Ok(dtoList);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto dto, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var loan = await _loanService.CreateLoanAsync(dto, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id = loan.Id }, loan);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { Message = ex.Message });
+        }
+    }
+
+    [HttpPut("{id:guid}/return")]
+    public async Task<ActionResult<LoanDto>> Return(Guid id, CancellationToken cancellationToken)
+    {
+        var loan = await _loanService.ReturnLoanAsync(id, cancellationToken);
+        if (loan == null) return NotFound();
+        return Ok(loan);
+    }
+}
