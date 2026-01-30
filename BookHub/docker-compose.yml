@@ -91,11 +91,34 @@ services:
       dockerfile: src/Web/BookHub.BlazorClient/Dockerfile
     container_name: bookhub-frontend
     environment:
-      - ApiSettings__CatalogServiceUrl=http://localhost:5001
-      - ApiSettings__UserServiceUrl=http://localhost:5002
-      - ApiSettings__LoanServiceUrl=http://localhost:5003
+      - ApiSettings__GatewayUrl=http://api-gateway:5000
+      # - ApiSettings__CatalogServiceUrl=http://localhost:5001
+      # - ApiSettings__UserServiceUrl=http://localhost:5002
+      # - ApiSettings__LoanServiceUrl=http://localhost:5003
     ports:
       - "8080:80"
+    depends_on:
+      - catalog-service
+      - user-service
+      - loan-service
+    networks:
+      - bookhub-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: src/Gateway/BookHub.ApiGateway/Dockerfile
+    container_name: bookhub-gateway
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - Services__CatalogService=http://catalog-service:8080
+      - Services__UserService=http://user-service:8080
+      - Services__LoanService=http://loan-service:8080
+      - JwtSettings__SecretKey=BookHubSuperSecretKeyThatIsAtLeast32CharactersLong!
+      - JwtSettings__Issuer=BookHub
+      - JwtSettings__Audience=BookHubUsers
+    ports:
+      - "5000:5000"
     depends_on:
       - catalog-service
       - user-service

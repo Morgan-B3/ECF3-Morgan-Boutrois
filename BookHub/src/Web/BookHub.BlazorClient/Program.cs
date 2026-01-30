@@ -11,14 +11,20 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 var apiSettings = builder.Configuration.GetSection("ApiSettings");
 
 // HttpClients pour chaque service
-var catalogClient = new HttpClient { BaseAddress = new Uri(apiSettings["CatalogServiceUrl"]) };
-var userClient = new HttpClient { BaseAddress = new Uri(apiSettings["UserServiceUrl"]) };
-var loanClient = new HttpClient { BaseAddress = new Uri(apiSettings["LoanServiceUrl"]) };
+//var catalogClient = new HttpClient { BaseAddress = new Uri(apiSettings["CatalogServiceUrl"]) };
+//var userClient = new HttpClient { BaseAddress = new Uri(apiSettings["UserServiceUrl"]) };
+//var loanClient = new HttpClient { BaseAddress = new Uri(apiSettings["LoanServiceUrl"]) };
+var httpClient = new HttpClient { BaseAddress = new Uri(apiSettings["GatewayUrl"]) };
 
-// Enregistre les services en passant explicitement leur HttpClient
-builder.Services.AddScoped<IBookService>(sp => new BookService(catalogClient));
-builder.Services.AddScoped<IAuthService>(sp => new AuthService(userClient));
-builder.Services.AddScoped<ILoanService>(sp => new LoanService(loanClient));
+// Enregistre les services en passant le même HttpClient
+builder.Services.AddScoped<IBookService>(sp => new BookService(httpClient));
+builder.Services.AddScoped<IAuthService>(sp => new AuthService(httpClient));
+builder.Services.AddScoped<ILoanService>(sp => new LoanService(httpClient));
+
+//// Enregistre les services en passant explicitement leur HttpClient
+//builder.Services.AddScoped<IBookService>(sp => new BookService(catalogClient));
+//builder.Services.AddScoped<IAuthService>(sp => new AuthService(userClient));
+//builder.Services.AddScoped<ILoanService>(sp => new LoanService(loanClient));
 
 builder.Services.AddScoped<AuthStateProvider>();
 
