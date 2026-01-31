@@ -79,7 +79,7 @@
 
     <footer class="bg-light py-3 mt-auto">
         <div class="container text-center">
-            <span class="text-muted">&copy; 2024 BookHub - Bibliothèque Numérique</span>
+            <span class="text-muted">&copy; @year BookHub - Bibliothèque Numérique</span>
         </div>
     </footer>
 </div>
@@ -89,4 +89,6 @@
     {
         await AuthState.LogoutAsync();
     }
+
+    private int year = DateTime.Now.Year;
 }
