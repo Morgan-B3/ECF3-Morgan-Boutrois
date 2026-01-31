@@ -47,17 +47,17 @@ Certaines fonctionnalités n'ont pu être terminées à temps, et ne sont donc p
 
 | Type | Lien / Localisation |
 |------|-------------------|
-| Architecture et structure du projet | [ARCHITECTURE.md](Bookhub/docs/ARCHITECTURE.md) |
-| Référence des endpoints API | [API_REFERENCE.md](Bookhub/docs/API_REFERENCE.md) |
-| Guide de déploiement | [DEPLOYMENT.md](Bookhub/docs/DEPLOYMENT.md) |
-| Guide de contribution | [CONTRIBUTING.md](Bookhub/docs/CONTRIBUTING.md) |
+| Architecture et structure du projet | [ARCHITECTURE.md](BookHub/docs/ARCHITECTURE.md) |
+| Référence des endpoints API | [API_REFERENCE.md](BookHub/docs/API_REFERENCE.md) |
+| Guide de déploiement | [DEPLOYMENT.md](BookHub/docs/DEPLOYMENT.md) |
+| Guide de contribution | [CONTRIBUTING.md](BookHub/docs/CONTRIBUTING.md) |
 | Modèle conceptuel de données | [MCD.png](/UML/Bookhub_MCD.png) |
 | Modèle logique de données | [MLD.png](/UML/Bookhub_MLD.png) |
 
 ---
 
 ## Accès aux services
-Après [démarrage du projet](Bookhub/docs/DEPLOYMENT.md), ses différents services sont disponibles aux adresses suivantes :
+Après [démarrage du projet](BookHub/docs/DEPLOYMENT.md), ses différents services sont disponibles aux adresses suivantes :
 
 | Service | URL |
 |---------|-----|
