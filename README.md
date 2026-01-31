@@ -40,6 +40,7 @@ Certaines fonctionnalités n'ont pu être terminées à temps, et ne sont donc p
 ### Branche "[env-variables](https://github.com/Morgan-B3/ECF3-Morgan-Boutrois/tree/env-variables)"
 - Création de fichiers .env afin de sécuriser les données secrètes (clé secrète JWT, identifiants postgres...).
 - Mise à jour de fichiers utilisant ces données en conséquence (docker-compose, Program.cs...)
+- Un exemple de .env peut être trouvé dans le fichier [DEPLOYMENT.md](/BookHub/docs/DEPLOYMENT.md#6-configuration-via-env-gestion-des-secrets)
 
 ---
 
