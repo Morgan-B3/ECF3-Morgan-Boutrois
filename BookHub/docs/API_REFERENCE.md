@@ -23,7 +23,7 @@
 - GET /api/loans/overdue
 
 ## Swagger
-Une fois les services démarrés (voir [DEPLOYMENT.md](DEPLOYMENT.md)), la liste complète de ces endpoints peut-être trouvée aux adresses suivantes :
+Une fois les [services démarrés](DEPLOYMENT.md), la liste complète de leurs endpoints peut-être trouvée aux adresses suivantes :
 - CatalogService : http://localhost:5001/swagger  
 - UserService : http://localhost:5002/swagger  
 - LoanService : http://localhost:5003/swagger  
