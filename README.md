@@ -68,3 +68,14 @@ Après [démarrage du projet](BookHub/docs/DEPLOYMENT.md), ses différents servi
 | LoanService | http://localhost:5003 |
 
 ---
+## Captures d'écran
+### Page d'accueil
+![Home](/screenshots/Home.png)
+### Liste des livres
+![Books](/screenshots/Books.png)
+### Détail d'un livre
+![BookDetails](/screenshots/BookDetails.png)
+### Mes emprunts
+![MyLoans](/screenshots/MyLoans.png)
+### Dashboard admin
+![Dashboard](/screenshots/Dashboard.png)
